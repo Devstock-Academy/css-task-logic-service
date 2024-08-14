@@ -8,12 +8,13 @@
     "build": "echo 'No build step required for this project'"
   },
   "dependencies": {
+    "@sparticuz/chromium": "^126.0.0",
     "cheerio": "^1.0.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "pixelmatch": "^6.0.0",
     "pngjs": "^7.0.0",
-    "puppeteer": "^23.0.2",
+    "puppeteer-core": "^23.0.2",
     "sharp": "^0.33.4",
     "util": "^0.12.5"
   }

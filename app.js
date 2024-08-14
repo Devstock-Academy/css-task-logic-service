@@ -2,10 +2,11 @@ import express from "express";
 import pixelmatch from 'pixelmatch';
 import sharp from 'sharp';
 import { promisify } from 'util';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
 import dotenv from 'dotenv';
 import {PNG} from 'pngjs';
 import * as cheerio from 'cheerio';
+import chromium from '@sparticuz/chromium';
 
 dotenv.config();
 PNG.prototype.promisifyParse = promisify(PNG.prototype.parse);
@@ -22,15 +23,10 @@ app.post('/', async (req, res) => {
   
   try {
     const browser = await puppeteer.launch({
-      headless: 'new',
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-        '--no-zygote',
-        '--single-process',
-      ],
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
     });
     const page = await browser.newPage();
 
@@ -42,6 +38,8 @@ app.post('/', async (req, res) => {
     await page.setContent(answerImageHTML);
 
     const answerImagePng = await page.screenshot({ type: 'png' });
+
+    console.log({answerImagePng})
 
     await browser.close();
 
@@ -77,6 +75,8 @@ app.post('/', async (req, res) => {
     const result = Number(
       (((pixlesQty - missmatch) / pixlesQty) * 100).toFixed(0),
     );
+
+    console.log({result})
     // todo: hardcore level, easy level - pixel perfect or not
     res.send(JSON.stringify({result:String(result > 97 ? 100 : result)}))
   } catch (error) {
@@ -85,7 +85,7 @@ app.post('/', async (req, res) => {
   }
   })
 
-app.listen(process.env.PORT , () => {
+app.listen(PORT , () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
 
