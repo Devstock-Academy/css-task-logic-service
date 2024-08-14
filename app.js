@@ -39,8 +39,6 @@ app.post('/', async (req, res) => {
 
     const answerImagePng = await page.screenshot({ type: 'png' });
 
-    console.log({answerImagePng})
-
     await browser.close();
 
     const targetImageBuffer = Buffer.from(
@@ -75,8 +73,6 @@ app.post('/', async (req, res) => {
     const result = Number(
       (((pixlesQty - missmatch) / pixlesQty) * 100).toFixed(0),
     );
-
-    console.log({result})
     // todo: hardcore level, easy level - pixel perfect or not
     res.send(JSON.stringify({result:String(result > 97 ? 100 : result)}))
   } catch (error) {
