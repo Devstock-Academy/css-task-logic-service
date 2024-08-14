@@ -4,7 +4,8 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "build": "echo 'No build step required for this project'"
   },
   "dependencies": {
     "cheerio": "^1.0.0",
@@ -15,11 +16,5 @@
     "puppeteer": "^23.0.2",
     "sharp": "^0.33.4",
     "util": "^0.12.5"
-  },
-  "exports": {
-    ".": {
-      "import": "./dist/es/app.js",  
-      "require": "./dist/cjs/app.cjs" 
-    }
   }
 }

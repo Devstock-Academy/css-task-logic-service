@@ -10,8 +10,9 @@ import * as cheerio from 'cheerio';
 dotenv.config();
 PNG.prototype.promisifyParse = promisify(PNG.prototype.parse);
 
+const PORT = process.env.PORT || 5000
+
 const app = express()
-const PORT = 3002 
 
 app.use(express.json());
 
@@ -84,7 +85,7 @@ app.post('/', async (req, res) => {
   }
   })
 
-app.listen(PORT, () => {
+app.listen(process.env.PORT , () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
 
