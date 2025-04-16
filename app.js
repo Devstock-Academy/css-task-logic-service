@@ -73,7 +73,7 @@ app.post('/', async (req, res) => {
       (((pixlesQty - missmatch) / pixlesQty) * 100).toFixed(0)
     )
 
-    console.log({ result })
+    console.log({ result, pixlesQty, missmatch })
 
     // todo: hardcore level, easy level - pixel perfect or not
     res.send(JSON.stringify({ result: String(result > 97 ? 100 : result) }))
