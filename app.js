@@ -64,19 +64,36 @@ app.post('/', async (req, res) => {
       targetImageToCheck.data,
       null,
       width,
-      height
+      height,
+      {
+        /*
+       The larger they are, the more we ignore color differentiation; the issue of aliasing on the edges also decreases.
+       */
+        threshold: 0.2,
+      }
     )
 
-    const pixlesQty = width * height
+    const pixelQty = width * height
+    const percDiff = (missmatch / pixelQty) * 100
+    const tolerance = Math.max(1, Math.floor(pixelQty * 0.006))
 
-    const result = Number(
-      (((pixlesQty - missmatch) / pixlesQty) * 100).toFixed(0)
-    )
+    let result
 
-    console.log({ result, pixlesQty, missmatch })
-
+    /*
+    The whole difficulty lies in properly balancing the tolerance multiplier (0.006) and the threshold.
+    A threshold that is too high will cause colors to be ignored but will reduce aliasing; the current settings seem to work well, but it's possible that I’ve missed some task or case.
+    */
+    if (missmatch <= tolerance) {
+      result = 100
+    } else {
+      result = Math.round(100 - percDiff)
+    }
     // todo: hardcore level, easy level - pixel perfect or not
-    res.send(JSON.stringify({ result: String(result > 97 ? 100 : result) }))
+    res.send(
+      JSON.stringify({
+        result: String(result),
+      })
+    )
   } catch (error) {
     console.error('COUNT MATCH ERROR: ', error)
     res.send(JSON.stringify(0))
